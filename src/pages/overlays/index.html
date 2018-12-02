@@ -41,6 +41,8 @@
                     <input type="text" class="form-control" placeholder="Height" id="height" value="1080">
                 </div>
                 <small>
+                    <a href="#" class="setsize" data-width="3840" data-height="2160">4K</a>
+                    /
                     <a href="#" class="setsize" data-width="2560" data-height="1440">1440p</a>
                     /
                     <a href="#" class="setsize" data-width="1920" data-height="1080">1080p</a>
@@ -49,13 +51,21 @@
                 </small>
             </div>
             <div class="col-6">
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="overwrite" id="overwriteYes" value="yes">
-                    <label class="form-check-label" for="overwriteYes">Overwrite existing files</label>
+                <div>
+                    Overwrite:
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="overwrite" id="overwriteYes" value="yes">
+                        <label class="form-check-label" for="overwriteYes">yes</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="overwrite" id="overwriteNo" value="no" checked>
+                        <label class="form-check-label" for="overwriteNo">no</label>
+                    </div>
                 </div>
                 <div class="form-check">
-                    <input class="form-check-input" type="radio" name="overwrite" id="overwriteNo" value="no" checked>
-                    <label class="form-check-label" for="overwriteNo">Do not overwrite existing files</label>
+                    <input class="form-check-input" type="checkbox" name="lookupClones" id="lookupClones" value="yes" checked>
+                    <label class="form-check-label" for="lookupClones">Copy parent rom overlay</label>
+                    <i class="icon-help" title="Copies the parent rom overlay if the rom is a clone, no overlay is found for the clone, and a parent overlay is available" style="cursor:help;"></i>
                 </div>
             </div>
         </div>
@@ -140,6 +150,7 @@ $(() => {
     $('#buttonInstall').on('click', (e) => {
         let pack = $('#packs .active'),
             overwrite = $('input[name=overwrite]:checked').val() == 'yes' ? true : false,
+            copyParent = $('#lookupClones').is(':checked'),
             romFolders = $('input[name=romFolder]:checked').map((idx, item) => $(item).val()).get(),
             width = parseInt($('#width').val()),
             height = parseInt($('#height').val());
@@ -166,7 +177,7 @@ $(() => {
         if (!configShare || configShare === '') { window.alert('Please fill the path to the config share'); return; }
         
         // download and install pack
-        overlays.downloadPack(romFolders, configShare, pack.data('pack'), overwrite, height / 1080);
+        overlays.downloadPack(romFolders, configShare, pack.data('pack'), overwrite, copyParent, height / 1080);
     });
 });
 </script>
